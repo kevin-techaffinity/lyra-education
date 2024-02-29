@@ -32,8 +32,8 @@ const Billing = () => {
                 <input type="hidden" name="merchant_id" value="17844670" />
                 <input type="hidden" name="merchant_key" value="o2djg0y03gnll" />
                 <input type="hidden" name="amount" value="5" />
-                <input type="hidden" name="return_url" value="https://lyra-education-ok4t73twa-kevin-techaffinity.vercel.app/successpay" />
-                <input type="hidden" name="cancel_url" value="https://lyra-education-ok4t73twa-kevin-techaffinity.vercel.app/failedpay" />
+                <input type="hidden" name="return_url" value="https://lyra-education-production.vercel.app/successpay" />
+                <input type="hidden" name="cancel_url" value="https://lyra-education-production.vercel.app/failedpay" />
                 <input type="hidden" name="notify_url" value="https://lifespace-public-api-a51a1df167c9.herokuapp.com/v1/test-payment-notify-url" />
                 <input type="hidden" name="item_name" value="Test Product" />
                 <input type="hidden" name="subscription_type" value="1" />
