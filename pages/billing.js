@@ -34,7 +34,7 @@ const Billing = () => {
                 <input type="hidden" name="amount" value="5" />
                 <input type="hidden" name="return_url" value="https://lyra-education-production.vercel.app/successpay" />
                 <input type="hidden" name="cancel_url" value="https://lyra-education-production.vercel.app/failedpay" />
-                <input type="hidden" name="notify_url" value="https://d29b-196-12-131-142.ngrok-free.app/v1/test-payment-notify-url" />
+                <input type="hidden" name="notify_url" value="https://189c-196-12-131-142.ngrok-free.app/v1/test-payment-notify-url" />
                 <input type="hidden" name="item_name" value="Test Product" />
                 <input type="hidden" name="subscription_type" value="1" />
                 <input type="hidden" name="billing_date" value="2020-01-01" />
