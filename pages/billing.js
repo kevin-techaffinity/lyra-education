@@ -75,7 +75,7 @@ const Billing = () => {
 
   const choosePlan = async (plan) => {
     const payload = {
-      amount: (availableVoucher?.discount ? ((plan?.amount * availableVoucher?.discount) /100) : plan?.amount).toString(),
+      amount: (availableVoucher?.discount ? (+plan?.amount - ((+plan?.amount * +availableVoucher?.discount) /100)) : plan?.amount).toString(),
       plan: plan?.name,
       item_name: module?.name?.trim().slice(0, -1)
     }
