@@ -43,7 +43,7 @@ export default function ModuleHeader({ slug, item }) {
     if (completionStatus?.completedToday && status === 'ACTIVE') return '';
     if (status === 'COMPLETED') return styles.moduleHeader__review;
     if (status === 'ACTIVE') return styles.moduleHeader__current;
-    if (status === 'READY') return styles.moduleHeader__current;
+    if (status === 'READY' || status === 'PENDING') return styles.moduleHeader__current;
     return '';
   };
 
@@ -62,10 +62,10 @@ export default function ModuleHeader({ slug, item }) {
       return;
     }
 
-    if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
-      router.push('/billing')
-      return;
-    }
+    // if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
+    //   router.push('/billing/' + name)
+    //   return;
+    // }
 
     router.push(slug);
   };
@@ -119,8 +119,7 @@ export default function ModuleHeader({ slug, item }) {
         </div>
 
         {status === 'COMPLETED' ||
-        completionStatus?.completedToday ||
-        !subscriptionStatus.subscribed.hasAccess ? (
+        completionStatus?.completedToday ? (
           ''
         ) : (
           <a onClick={handleClick} className={`${styles.moduleHeader__status} ${buttonClass()}`}>

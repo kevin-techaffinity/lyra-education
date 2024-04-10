@@ -18,6 +18,7 @@ import { addOneDay } from '../utilities/date';
 import { signup } from '../services/User';
 import axios from 'axios';
 import { hasCookie } from 'cookies-next';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Index({ allowPopup }) {
   const [show, setShow] = useState(true);

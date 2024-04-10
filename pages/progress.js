@@ -30,7 +30,7 @@ export default function Progress() {
         <StaticHeader title="Your Progress">
           View or review your completed course material below:
         </StaticHeader>
-        <CardContainer items={modules.filter((o) => ['COMPLETED', 'ACTIVE'].includes(o.status))} />
+        <CardContainer items={modules.filter((o) => ['PENDING', 'COMPLETED', 'ACTIVE'].includes(o.status))} />
       </Grid>
     </>
   );

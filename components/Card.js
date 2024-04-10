@@ -46,7 +46,7 @@ export default function Card({ course }) {
         </>
       );
     }
-    if (status === 'READY') {
+    if (status === 'READY' || status == 'PENDING') {
       return (
         <>
           <span>Start Now</span>
@@ -66,16 +66,16 @@ export default function Card({ course }) {
         </>
       );
     }
-    if (status === 'PENDING') {
-      return (
-        <>
-          <span>Module</span>
-          <i className="icon">
-            <FaLock />
-          </i>
-        </>
-      );
-    }
+    // if (status === 'PENDING') {
+    //   return (
+    //     <>
+    //       <span>Module</span>
+    //       <i className="icon">
+    //         <FaLock />
+    //       </i>
+    //     </>
+    //   );
+    // }
     if (status === 'COMPLETED') {
       return (
         <>
@@ -109,7 +109,7 @@ export default function Card({ course }) {
   };
 
   const handleClick = () => {
-    if (!['READY', 'ACTIVE', 'COMPLETED'].includes(status)) return;
+    // if (!['READY', 'ACTIVE', 'COMPLETED'].includes(status)) return;
     Router.push('/module/[module]', slug);
   };
 

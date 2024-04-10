@@ -22,6 +22,7 @@ import { hasCookie } from 'cookies-next';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { ModuleProvider } from '../context/ModuleContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -70,6 +71,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <HelmetProvider>
+      <ModuleProvider>
       <Helmet>
         <script src="https://www.payfast.co.za/onsite/engine.js"></script>
       </Helmet>
@@ -115,6 +117,7 @@ export default function App({ Component, pageProps }) {
           )}
         </motion.div>
       </AnimatePresence>
+      </ModuleProvider>
     </HelmetProvider>
   );
 }

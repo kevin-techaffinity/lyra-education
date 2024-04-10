@@ -9,12 +9,14 @@ import ModuleHeader from '../../components/headers/ModuleHeader';
 import Hero from '../../components/Hero';
 import useService from '../../hooks/useService';
 import { getModule } from '../../services/Content';
+import { useModuleContext } from '../../context/ModuleContext';
 
 export default function Index() {
   const router = useRouter();
   const [slug, setSlug] = useState('/');
   const [module, setModule] = useState(null);
   const { service } = useService();
+  const { setCourse } = useModuleContext()
 
   useEffect(() => {
     getModule(router.query.module).then((data) => {
@@ -24,6 +26,7 @@ export default function Index() {
       const progress = pages.find((o) => ['PENDING'].includes(o.status));
       setSlug(progress ? progress.slug : '');
       setModule(data);
+      setCourse(data)
     });
   }, [router.query.module]);
 

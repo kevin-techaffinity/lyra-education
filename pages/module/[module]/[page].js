@@ -15,25 +15,19 @@ import Steps from '../../../components/Steps';
 import useService from '../../../hooks/useService';
 import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
+import { checkSubscription, courseSubscription } from '../../../public/data/courseSubscription';
+import { useModuleContext } from '../../../context/ModuleContext';
 
 export default function Page() {
   const router = useRouter();
   const [page, setPage] = useState({});
   const [module, setModule] = useState({});
+  const [checkSubscribe, setCheckSubscribe] = useState(false);
+  const {course} = useModuleContext();
 
   const { subscriptionStatus } = useSubscribed();
   const { service } = useService();
-
-  useEffect(() => {
-    if (!service) return;
-
-    if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
-      if (!router.query.preview) {
-        router.push('/billing')
-      }
-    }
-  }, [service, router.query, subscriptionStatus]);
-
+  
   useEffect(() => {
     getPage(router.query.page, router.query.preview).then((data) => {
       setPage(data);
@@ -43,6 +37,23 @@ export default function Page() {
       setModule(data);
     });
   }, [router.query]);
+
+  useEffect(() => {
+    if (!service) return;
+
+
+    if(checkSubscription(course, 'admin')) {
+      router.push('/billing?course=' + router.query.module)
+    }
+
+    setCheckSubscribe(true)
+    // if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
+    //   if (!router.query.preview) {
+    //     router.push('/billing?course=' + router.query.module)
+    //   }
+    // }
+  }, [service, router.query, subscriptionStatus]);
+  
 
   const md = new Remarkable();
 
@@ -55,7 +66,9 @@ export default function Page() {
   if (!service) return null;
   if (!page) return null;
 
-  return (
+  console.log('Course 1234567 ', courseSubscription)
+
+  return checkSubscribe && (
     <>
       {service.assets && <Hero banner={service.assets.banner} />}
       <Grid>
