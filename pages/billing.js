@@ -21,7 +21,7 @@ export const payingPlan = [
     name: 'Pro',
     description: 'You can have more than a single change but double that with some greatness experience.',
     // amount: 350,
-    amount: 5,
+    amount: 10,
     deduct: 500,
     duration: 2
   },
@@ -29,7 +29,7 @@ export const payingPlan = [
     name: 'Premium',
     description: 'Maximize your time with courses that will change your life on an amazing discount.',
     // amount: 450,
-    amount: 5,
+    amount: 15,
     deduct: 750,
     duration: 3
   },
@@ -90,7 +90,6 @@ const Billing = () => {
       });
 
       setAvailableVoucher('')
-      updateSubscription('admin', plan, module, payload.amount)
     }
     
 
