@@ -16,7 +16,7 @@ import useService from '../../../hooks/useService';
 import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
 // import { checkSubscription, courseSubscription } from '../../../public/data/courseSubscription';import { useModuleContext } from '../../../context/ModuleContext';
-import { checkSubscription } from '../../../services/COurseSubscription';
+import { checkSubscription } from '../../../services/CourseSubscription';
 import { useModuleContext } from '../../../context/ModuleContext';
 
 export default function Page() {

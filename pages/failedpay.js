@@ -5,7 +5,7 @@ import Cancel from '../public/images/cancel.svg'
 import { getModule } from '../services/Content';
 import { payingPlan } from './billing';
 import { updateSubscription } from '../public/data/courseSubscription';
-import { createSubscription } from '../services/COurseSubscription';
+import { createSubscription } from '../services/CourseSubscription';
 
 const FailedPay = () => {
   const searchParams = useSearchParams();

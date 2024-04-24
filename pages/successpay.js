@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { getModule } from '../services/Content';
 import { payingPlan } from './billing'
 import { updateSubscription } from '../public/data/courseSubscription'
-import { createSubscription } from '../services/COurseSubscription'
+import { createSubscription } from '../services/CourseSubscription'
 
 const SuccessPay = () => {
   const searchParams = useSearchParams();
