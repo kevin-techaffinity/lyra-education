@@ -7,33 +7,30 @@ import { courseSubscription, updateSubscription } from '../public/data/courseSub
 import { getModule } from '../services/Content';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { getPlan } from '../services/Plan';
 
-export const payingPlan = [
-  {
-    name: 'Starter',
-    description: 'Great for beginners to learn and grow in loving what we offer and change their life.',
-    // amount: 199,
-    amount: 5,
-    duration: 1,
-    deduct: 250
+const payingPlan = {
+  ['Basic']: {
+    description: 'Select any 1 coaching programme and get lifetime access',
+    deduct: '250',
+    percentage: 20
   },
-  {
-    name: 'Pro',
-    description: 'You can have more than a single change but double that with some greatness experience.',
-    // amount: 350,
-    amount: 10,
-    deduct: 500,
-    duration: 2
+  ['Pro']: {
+    description: 'Select any 2 coaching programmes and get lifetime access',
+    deduct: '500',
+    percentage: 30
   },
-  {
-    name: 'Premium',
-    description: 'Maximize your time with courses that will change your life on an amazing discount.',
-    // amount: 450,
-    amount: 15,
-    deduct: 750,
-    duration: 3
+  ['Premium']: {
+    description: 'Select any 3 coaching programmes abd get lifetime access',
+    deduct: '750',
+    percentage: 40
   },
-]
+  ['Platinum']: {
+    description: 'Access unlimited coaching programmes for a year',
+    deduct: '1900',
+    percentage: 55
+  },
+}
 
 const Billing = () => {
   const router = useRouter();
@@ -42,41 +39,21 @@ const Billing = () => {
   const [selectedBilling, setSelectedBilling] = useState(null);
   const [htmlContent, setHTMLContent] = useState('');
   const [voucher, setVoucher] = useState('');
-  const [availableVoucher, setAvailableVoucher] = useState('')
+  const [availableVoucher, setAvailableVoucher] = useState('');
+  const [plans, setPlans] = useState([]);
 
   useEffect(() => {
     getModule(course).then((data) => {
       setModule(data);
     });
+    getPlan().then((data) => {
+      setPlans(data)
+    })
   }, [router.query]);
-
-  const getDate = () => {
-    // Create a new Date object
-    let date = new Date();
-
-    // Get the date in ISO string format
-    let isoString = date.toISOString();
-
-    // Extract the date part and time part separately
-    let [datePart, timePart] = isoString.split('T');
-
-    // Get the offset in hours and minutes
-    let offsetHours = Math.floor(date.getTimezoneOffset() / 60);
-    let offsetMinutes = date.getTimezoneOffset() % 60;
-
-    // Format the offset string
-    let offsetString = `${offsetHours >= 0 ? '+' : '-'}${Math.abs(offsetHours)
-      .toString()
-      .padStart(2, '0')}:${offsetMinutes.toString().padStart(2, '0')}`;
-
-    // Construct the final ISO string with offset
-    return `${datePart}T${timePart}${offsetString}`;
-  };
 
   const choosePlan = async (plan) => {
     const payload = {
-      amount: (availableVoucher?.discount ? (+plan?.amount - ((+plan?.amount * +availableVoucher?.discount) /100)) : plan?.amount).toString(),
-      plan: plan?.name,
+      amount: (availableVoucher?.discount ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
       item_name: module?.name?.trim().slice(0, -1)
     }
 
@@ -85,24 +62,15 @@ const Billing = () => {
     if (result.uuid) {
       window.payfast_do_onsite_payment({
         uuid: result.uuid,
-        return_url: window.location.origin + `/successpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.name}&course=${course}`,
-        cancel_url: window.location.origin + `/failedpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.name}&course=${course}`,
+        return_url: window.location.origin + `/successpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
+        cancel_url: window.location.origin + `/failedpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
       });
 
       setAvailableVoucher('')
     }
-    
+
 
     router.back();
-
-    // courseSubscription.push({
-    //   user: 'admin',
-    //   duration: (plan?.duration - module?.duration),
-    //   course: [module],
-    //   amount: payload?.amount,
-
-    //   createdAt: Date.now()
-    // })
   };
 
   const handleVoucher = async () => {
@@ -121,48 +89,48 @@ const Billing = () => {
       <div className="container mt-md-5">
         <div className="row">
           <div className='col-md-5'>
-            <h3>Select a Plan</h3>
             <h6 className='mb-3'>
-              <small className="text-muted">Select one plan of the three to go with</small>
+              <small style={{color: '#17A2B8'}}>Join a Life Coach today & live the life you want!</small>
             </h6>
+            <h3>Select your Magic Plan</h3>
             <div className="p-4 bg-light my-2">
               <h6 className="my-2 font-weight-bold">What You get With Our Plan</h6>
               <div className="my-4 d-flex flex-column">
                 <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Up-to-date content</small>
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Skilled life coaching experts</small>
                 </span>
                 <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Ready-and-verified content uploads</small>
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>A powerful journey to put you on the road to success</small>
                 </span>
                 <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Unlimited Content</small>
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Flexible learning at your own pace</small>
                 </span>
                 <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Step by step daily guidance from your coach</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Enhance your skill set and personal growth</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Invest in yourself & your future</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Practical tools to see tangible results</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
                   <small>Creative and well-developed contents</small>
                 </span>
                 <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>100% Lifes lessons</small>
-                </span>
-                <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Books that covers all categories</small>
-                </span>
-                <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Images as part of contents</small>
-                </span>
-                <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>Creative and well-developed contents</small>
-                </span>
-                <span className="my-2">
-                  <MdOutlineCheck color="#82C760" /> &nbsp;
-                  <small>100% Lifes lessons</small>
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Bite size fun learning & development</small>
                 </span>
               </div>
             </div>
@@ -235,7 +203,7 @@ const Billing = () => {
                   </div>
                 </div>
               </form> */}
-              {payingPlan?.map((plan, key) => (
+              {plans?.map((plan, key) => (
                 <div key={key} className="my-3" onClick={() => choosePlan(plan)} style={{cursor: 'pointer'}}>
                   <div className="row border rounded p-3">
                     <div className='col-md-9'>
@@ -243,81 +211,19 @@ const Billing = () => {
                         <small className="font-weight-bold">{plan?.name}</small>
                       </h5>
                       <small style={{fontSize: '11px'}}>
-                        {plan?.description}
+                        {payingPlan[plan?.name]?.description}
                       </small>
                     </div>
                     <div className='col-md-3'>
-                      <small className='font-weight-bold'>{availableVoucher?.discount ? 'ZAR ' + (plan?.amount - (plan?.amount * availableVoucher?.discount) /100) + ' /Cr' : 'ZAR ' + plan?.amount + ' /Cr'}</small>
+                      <small className='font-weight-bold'>{availableVoucher?.discount ? 'R ' + (plan?.price - (plan?.price * availableVoucher?.discount) /100) : 'R ' + plan?.price}</small>
                       <br />
-                      {(plan?.deduct || (plan?.deduct && availableVoucher?.discount)) && <small className='text-muted' style={{fontSize: '11px'}}><del>{availableVoucher?.discount ? 'ZAR ' + (plan?.deduct - (plan?.deduct * availableVoucher?.discount) /100) + ' /Cr' : 'ZAR ' + plan?.deduct + ' /Cr'}</del></small>}
-                      {/* <button
-                        className="btn btn-sm btn-outline-secondary rounded-pill"
-                      >
-                        <small>Get Started</small>
-                      </button> */}
+                      {(payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct && availableVoucher?.discount)) && <small className='text-muted' style={{fontSize: '12px'}}><del>{availableVoucher?.discount ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
+                      <br />
+                      <small className='font-weight-bold text-muted' style={{fontSize: '11.5px'}}>Save {payingPlan[plan?.name]?.percentage} %</small>
                     </div>
                   </div>
                 </div>
               ))}
-              {/* <div className="my-3">
-                <div className="row border rounded p-3">
-                  <div className='col-md-9'>
-                    <h5 className="p-0 m-0 mb-2">
-                      <small className="font-weight-bold">Pro</small>
-                    </h5>
-                    <small style={{fontSize: '11px'}}>
-                    You can have more than a single change but double that with some greatness experience
-                    </small>
-                  </div>
-                  <div className='col-md-3'>
-                    <small className='font-weight-bold' style={{fontSize: '14px'}}>ZAR 890 /Cr</small>
-                    <br />
-                    <small className='text-muted' style={{fontSize: '11px'}}><del>ZAR 84 /Cr</del></small>
-                  </div>
-                </div>
-              </div>
-              <div className="my-3">
-                <div className="row border rounded p-3">
-                  <div className='col-md-9'>
-                    <h5 className="p-0 m-0 mb-2">
-                      <small className="font-weight-bold">Premium</small>
-                    </h5>
-                    <small style={{fontSize: '11px'}}>
-                    Maximize your time with courses that will change your life on an amazing discount
-                    </small>
-                  </div>
-                  <div className='col-md-3'>
-                    <small className='font-weight-bold' style={{fontSize: '14px'}}>ZAR 1,365 /Cr</small>
-                    <br />
-                    <small className='text-muted' style={{fontSize: '11px'}}><del>ZAR 96 /Cr</del></small>
-                  </div>
-                </div>
-              </div> */}
-              {/* <div className="my-3">
-                <div className="d-flex align-items-center justify-content-between shadow p-3">
-                  <div>
-                    <h6 className="p-0 m-0">
-                      <small className="font-weight-bol">Premium</small>
-                    </h6>
-                    <h6 className="p-0 my-2">
-                      <small>
-                        1 Year -{' '}
-                        <span>
-                          <small className="font-weight-bold">ZAR 5</small>
-                        </span>
-                      </small>
-                    </h6>
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => choosePlan({ amount: '5', item_name: '1 Year' })}
-                      className="btn btn-sm btn-outline-secondary rounded-pill"
-                    >
-                      <small>Get Started</small>
-                    </button>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

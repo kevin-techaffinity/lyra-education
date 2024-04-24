@@ -15,7 +15,8 @@ import Steps from '../../../components/Steps';
 import useService from '../../../hooks/useService';
 import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
-import { checkSubscription, courseSubscription } from '../../../public/data/courseSubscription';
+// import { checkSubscription, courseSubscription } from '../../../public/data/courseSubscription';import { useModuleContext } from '../../../context/ModuleContext';
+import { checkSubscription } from '../../../services/COurseSubscription';
 import { useModuleContext } from '../../../context/ModuleContext';
 
 export default function Page() {
@@ -27,7 +28,7 @@ export default function Page() {
 
   const { subscriptionStatus } = useSubscribed();
   const { service } = useService();
-  
+
   useEffect(() => {
     getPage(router.query.page, router.query.preview).then((data) => {
       setPage(data);
@@ -41,9 +42,12 @@ export default function Page() {
   useEffect(() => {
     if (!service) return;
 
-
-    if(checkSubscription(course, 'admin')) {
-      router.push('/billing?course=' + router.query.module)
+    if(module?.id) {
+      checkSubscription(module?.id).then((data) => {
+        if(data) {
+          router.push('/billing?course=' + router.query.module)
+        }
+      })
     }
 
     setCheckSubscribe(true)
@@ -52,8 +56,8 @@ export default function Page() {
     //     router.push('/billing?course=' + router.query.module)
     //   }
     // }
-  }, [service, router.query, subscriptionStatus]);
-  
+  }, [service, router.query, module, subscriptionStatus]);
+
 
   const md = new Remarkable();
 
@@ -65,8 +69,6 @@ export default function Page() {
   if (!module) return null;
   if (!service) return null;
   if (!page) return null;
-
-  console.log('Course 1234567 ', courseSubscription)
 
   return checkSubscribe && (
     <>

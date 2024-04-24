@@ -14,10 +14,8 @@ export const updateSubscription = (user, plan, module, amount) => {
   const index = courseSubscription.findIndex((course) => course.user === user );
   
   if (index !== -1) {
-    console.log('Hereee 22')
     if ((courseSubscription[index].course.filter(obj => obj.hasOwnProperty('duration'))).length > courseSubscription[index].duration) {
-      console.log('Hereee')
-      courseSubscription[index].duration += +plan.duration;
+      courseSubscription[index].duration = +plan.duration - 1;
       courseSubscription[index].plan = plan;
       courseSubscription[index].course.push(module);
       courseSubscription[index].amount += +amount;
@@ -50,7 +48,6 @@ export const checkSubscription = (module, user) => {
         const key = courseSubscription.findIndex((course) => course.user == user);
         if(key !== -1) {
             courseSubscription[key].course.push(module);
-            courseSubscription[key].duration - 1;
 
             return false;
         }

@@ -5,6 +5,7 @@ import Cancel from '../public/images/cancel.svg'
 import { getModule } from '../services/Content';
 import { payingPlan } from './billing';
 import { updateSubscription } from '../public/data/courseSubscription';
+import { createSubscription } from '../services/COurseSubscription';
 
 const FailedPay = () => {
   const searchParams = useSearchParams();
@@ -15,18 +16,18 @@ const FailedPay = () => {
   const plan = searchParams.get('plan');
   const course = decodeURIComponent(searchParams.get('course'));
 
-  console.log('Item ', item)
-
   useEffect(() => {
     getModule(course).then((data) => {
       setModule(data);
     });
 
   }, []);
-  
+
   const handleCourseSubscribe = () => {
     // updateSubscription('admin', payingPlan.filter(item => item?.name == plan)[0], module, amount);
-
+    createSubscription({plan_id: plan, amount, moduleId: module?.id}).then((data) => {
+      console.log('More Data', data)
+    })
     router.push('/module/' + course)
   }
 
