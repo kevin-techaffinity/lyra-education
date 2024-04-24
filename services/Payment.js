@@ -1,6 +1,6 @@
 import { post } from "../utilities/httpRequest";
 
-export const payHere = async ({amount, plan, item_name}) => {
+export const payHere = async ({amount, item_name}) => {
   const response = await post({request: `/payhere`, body: {amount, item_name} })
   return response;
 }

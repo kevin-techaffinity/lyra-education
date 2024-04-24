@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { getModule } from '../services/Content';
 import { payingPlan } from './billing'
 import { updateSubscription } from '../public/data/courseSubscription'
+import { createSubscription } from '../services/COurseSubscription'
 
 const SuccessPay = () => {
   const searchParams = useSearchParams();
@@ -22,9 +23,12 @@ const SuccessPay = () => {
     });
 
   }, []);
-  
+
   const handleCourseSubscribe = () => {
-    updateSubscription('admin', payingPlan.filter(item => item?.name == plan)[0], module, amount);
+    createSubscription({plan_id: plan, amount, moduleId: module?.id}).then((data) => {
+      console.log('More Data', data)
+    })
+    // updateSubscription('admin', payingPlan.filter(item => item?.name == plan)[0], module, amount);
 
     router.push('/module/' + course)
   }
