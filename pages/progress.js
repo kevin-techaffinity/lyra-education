@@ -7,7 +7,7 @@ import StaticHeader from '../components/headers/StaticHeader';
 import Hero from '../components/Hero';
 import useModules from '../hooks/useModules';
 import useService from '../hooks/useService';
-import { getMyProgress } from '../services/COurseSubscription';
+import { getMyProgress } from '../services/CourseSubscription';
 import { displayProgress } from '../utilities/showCourseStatus';
 
 export default function Progress() {
