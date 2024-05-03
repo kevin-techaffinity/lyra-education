@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Remarkable } from 'remarkable';
 
@@ -15,8 +15,17 @@ export default function Index() {
   const router = useRouter();
   const [slug, setSlug] = useState('/');
   const [module, setModule] = useState(null);
+  const [remainingSlots, setRemainingSlots] = useState(0);
   const { service } = useService();
-  const { setCourse } = useModuleContext()
+  const { setCourse } = useModuleContext();
+
+  function closeModal() {
+    setShow(false);
+  }
+
+  function openModal() {
+    setShow(true);
+  }
 
   useEffect(() => {
     getModule(router.query.module).then((data) => {
@@ -26,7 +35,7 @@ export default function Index() {
       const progress = pages.find((o) => ['PENDING'].includes(o.status));
       setSlug(progress ? progress.slug : '');
       setModule(data);
-      setCourse(data)
+      setCourse(data);
     });
   }, [router.query.module]);
 

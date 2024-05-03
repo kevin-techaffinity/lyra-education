@@ -23,6 +23,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Index({ allowPopup }) {
   const [show, setShow] = useState(true);
   const [flash, setFlash] = useState(undefined);
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const [data, setData] = useState({
     username: '',
     email: '',

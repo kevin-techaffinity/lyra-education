@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Remarkable } from 'remarkable';
 
 import CardContainer from '../components/CardContainer';
@@ -7,8 +7,11 @@ import StaticHeader from '../components/headers/StaticHeader';
 import Hero from '../components/Hero';
 import useModules from '../hooks/useModules';
 import useService from '../hooks/useService';
+import { getMyProgress } from '../services/COurseSubscription';
+import { displayProgress } from '../utilities/showCourseStatus';
 
 export default function Progress() {
+  const [myProgress, setMyProgress] = useState([]);
   const { modules } = useModules();
   const { service } = useService();
 
@@ -23,6 +26,13 @@ export default function Progress() {
     breaks: true,
   });
 
+  useEffect(() => {
+    getMyProgress().then((data) => {
+      setMyProgress(data?.response)
+    });
+  }, [])
+
+  const {data} = displayProgress(myProgress, modules)
   return (
     <>
       {assets && <Hero banner={assets.banner} />}
@@ -30,7 +40,7 @@ export default function Progress() {
         <StaticHeader title="Your Progress">
           View or review your completed course material below:
         </StaticHeader>
-        <CardContainer items={modules.filter((o) => ['PENDING', 'COMPLETED', 'ACTIVE'].includes(o.status))} />
+        {data.length > 0 ? <CardContainer items={data} /> : <h6 className='text-center'>No Progress so Far !</h6>}
       </Grid>
     </>
   );

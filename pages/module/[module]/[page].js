@@ -15,8 +15,7 @@ import Steps from '../../../components/Steps';
 import useService from '../../../hooks/useService';
 import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
-// import { checkSubscription, courseSubscription } from '../../../public/data/courseSubscription';import { useModuleContext } from '../../../context/ModuleContext';
-import { checkSubscription } from '../../../services/CourseSubscription';
+import { checkSubscription, createSubscription } from '../../../services/CourseSubscription';
 import { useModuleContext } from '../../../context/ModuleContext';
 
 export default function Page() {
@@ -24,7 +23,6 @@ export default function Page() {
   const [page, setPage] = useState({});
   const [module, setModule] = useState({});
   const [checkSubscribe, setCheckSubscribe] = useState(false);
-  const {course} = useModuleContext();
 
   const { subscriptionStatus } = useSubscribed();
   const { service } = useService();

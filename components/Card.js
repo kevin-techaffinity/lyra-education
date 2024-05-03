@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FaArrowRight,
   FaCheck,
@@ -20,10 +20,18 @@ import styles from '../styles/components/Card.module.sass';
 
 import Image from './Image';
 import ScrollFade from './ScrollFade';
+import { getMyProgress } from '../services/CourseSubscription';
 
 export default function Card({ course }) {
+  const [myProgress, setMyProgress] = useState([]);
   const { completionStatus } = useCompleted();
-  const { slug, name, duration, author, updatedAt, caption, status, assets } = course;
+  const { slug, name, id, duration, author, updatedAt, caption, status, assets } = course;
+
+  useEffect(() => {
+    getMyProgress().then((data) => {
+      setMyProgress(data?.response)
+    });
+  }, [])
 
   const button = () => {
     if (duration === 0) {
@@ -49,7 +57,7 @@ export default function Card({ course }) {
     if (status === 'READY' || status == 'PENDING') {
       return (
         <>
-          <span>Start Now</span>
+          <span>{myProgress.some(obj => obj?.id == id) ? 'In Progress' : 'Start Now'}</span>
           <i className="icon">
             <FaArrowRight />
           </i>

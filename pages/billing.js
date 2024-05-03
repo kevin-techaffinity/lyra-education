@@ -8,6 +8,8 @@ import { getModule } from '../services/Content';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { getPlan } from '../services/Plan';
+import { createSubscription } from '../services/CourseSubscription';
+import { applyVoucher } from '../services/Voucher';
 
 const payingPlan = {
   ['Basic']: {
@@ -53,35 +55,38 @@ const Billing = () => {
 
   const choosePlan = async (plan) => {
     const payload = {
-      amount: (availableVoucher?.discount ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
+      amount: (((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
       item_name: module?.name?.trim().slice(0, -1)
     }
 
-    const result = await payHere(payload);
+    if(parseInt(payload?.amount) < 6) {
 
-    if (result.uuid) {
-      window.payfast_do_onsite_payment({
-        uuid: result.uuid,
-        return_url: window.location.origin + `/successpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
-        cancel_url: window.location.origin + `/failedpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
-      });
+      createSubscription({plan_id: plan?.id.toString(), amount: payload?.amount, moduleId: module?.id}).then((data) => {
+        router.push(module?.slug)
+      })
+    } else {
+      const result = await payHere(payload);
 
-      setAvailableVoucher('')
+      if (result.uuid) {
+        window.payfast_do_onsite_payment({
+          uuid: result.uuid,
+          return_url: window.location.origin + `/successpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
+          cancel_url: window.location.origin + `/failedpay?amount=${payload?.amount}&item=${payload?.item_name}&plan=${plan?.id}&course=${course}`,
+        });
+
+        setAvailableVoucher('')
+      }
+
+      router.back();
     }
-
-
-    router.back();
   };
 
-  const handleVoucher = async () => {
+  const handleVoucher = () => {
     setVoucher('')
-    const result = getVouchers.filter(item => item.usedBy == '' && item.code == voucher);
-
-    if(result.length > 0) {
+    applyVoucher(voucher).then((data)  => {
       toast('Discount applied !!');
-      updateVoucher(result[0].id, 'admin')
-      setAvailableVoucher(result[0]);
-    }
+      setAvailableVoucher(data);
+    })
   }
 
   return (
@@ -215,9 +220,9 @@ const Billing = () => {
                       </small>
                     </div>
                     <div className='col-md-3'>
-                      <small className='font-weight-bold'>{availableVoucher?.discount ? 'R ' + (plan?.price - (plan?.price * availableVoucher?.discount) /100) : 'R ' + plan?.price}</small>
+                      <small className='font-weight-bold'>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (plan?.price - (plan?.price * availableVoucher?.discount) /100) : 'R ' + plan?.price}</small>
                       <br />
-                      {(payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct && availableVoucher?.discount)) && <small className='text-muted' style={{fontSize: '12px'}}><del>{availableVoucher?.discount ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
+                      {((payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct) && ((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount))) && <small className='text-muted' style={{fontSize: '12px'}}><del>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
                       <br />
                       <small className='font-weight-bold text-muted' style={{fontSize: '11.5px'}}>Save {payingPlan[plan?.name]?.percentage} %</small>
                     </div>
