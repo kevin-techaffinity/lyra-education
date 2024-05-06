@@ -15,22 +15,26 @@ const payingPlan = {
   ['Basic']: {
     description: 'Select any 1 coaching programme and get lifetime access',
     deduct: '250',
-    percentage: 20
+    percentage: 20,
+    id: 4
   },
   ['Pro']: {
     description: 'Select any 2 coaching programmes and get lifetime access',
     deduct: '500',
-    percentage: 30
+    percentage: 30,
+    id: 5
   },
   ['Premium']: {
     description: 'Select any 3 coaching programmes abd get lifetime access',
     deduct: '750',
-    percentage: 40
+    percentage: 40,
+    id: 6
   },
   ['Platinum']: {
     description: 'Access unlimited coaching programmes for a year',
     deduct: '1900',
-    percentage: 55
+    percentage: 55,
+    id: 8
   },
 }
 
@@ -60,7 +64,6 @@ const Billing = () => {
     }
 
     if(parseInt(payload?.amount) < 6) {
-
       createSubscription({plan_id: plan?.id.toString(), amount: payload?.amount, moduleId: module?.id}).then((data) => {
         router.push(module?.slug)
       })
@@ -84,8 +87,15 @@ const Billing = () => {
   const handleVoucher = () => {
     setVoucher('')
     applyVoucher(voucher).then((data)  => {
-      toast('Discount applied !!');
       setAvailableVoucher(data);
+      
+      if(data?.discount == '100') {
+        choosePlan({name: data?.plan, price: 0, id: payingPlan[data?.plan]?.id})
+      }
+      
+      toast('Discount applied !!');
+    }).catch((err) => {
+      toast('Failed to apply discount !!');
     })
   }
 
@@ -222,9 +232,9 @@ const Billing = () => {
                     <div className='col-md-3'>
                       <small className='font-weight-bold'>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (plan?.price - (plan?.price * availableVoucher?.discount) /100) : 'R ' + plan?.price}</small>
                       <br />
-                      {((payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct) && ((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount))) && <small className='text-muted' style={{fontSize: '12px'}}><del>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
+                      {!availableVoucher && ((payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct) && ((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount))) && <small className='text-muted' style={{fontSize: '12px'}}><del>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
                       <br />
-                      <small className='font-weight-bold text-muted' style={{fontSize: '11.5px'}}>Save {payingPlan[plan?.name]?.percentage} %</small>
+                      {!availableVoucher && <small className='font-weight-bold text-muted' style={{fontSize: '11.5px'}}>Save {payingPlan[plan?.name]?.percentage} %</small>}
                     </div>
                   </div>
                 </div>

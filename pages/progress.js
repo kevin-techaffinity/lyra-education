@@ -8,6 +8,7 @@ import Hero from '../components/Hero';
 import useModules from '../hooks/useModules';
 import useService from '../hooks/useService';
 import { getMyProgress } from '../services/CourseSubscription';
+import { autologout } from '../services/User';
 import { displayProgress } from '../utilities/showCourseStatus';
 
 export default function Progress() {
@@ -33,6 +34,13 @@ export default function Progress() {
   }, [])
 
   const {data} = displayProgress(myProgress, modules)
+
+  const handleLogout = () => {
+    autologout();
+
+    window.location = '/';
+  }
+
   return (
     <>
       {assets && <Hero banner={assets.banner} />}
@@ -42,6 +50,9 @@ export default function Progress() {
         </StaticHeader>
         {data.length > 0 ? <CardContainer items={data} /> : <h6 className='text-center'>No Progress so Far !</h6>}
       </Grid>
+      <div className='d-flex w-100 justify-content-center mt-5'>
+       <button onClick={handleLogout} className='border-0 px-5 rounded-pill text-white py-2 bg-danger'>Sign Out</button>
+      </div>
     </>
   );
 }

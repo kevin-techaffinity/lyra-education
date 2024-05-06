@@ -74,9 +74,20 @@ export default function ModuleHeader({ slug, item }) {
 
     getSlots(id).then((data) => {
       setRemainingSlot(data?.remaingSlots)
-      if(!data?.isCourseExists && data?.remaingSlots > 0) {
+       
+      if(data?.isCourseExists && data?.remaingSlots > 4) {
+        createSubscription({plan_id: "", amount: "", moduleId: id, update: true}).then((data) => {
+      
+        }).catch((err) => toast(err))
+        router.push(slug);
+      }
+      else if(!data?.isCourseExists && data?.remaingSlots > 4) {
+        router.push(slug);
+      }
+      else if(!data?.isCourseExists && data?.remaingSlots > 0) {
         setShow(true)
-      } else {
+      }
+      else {
         router.push(slug);
       }
     })
