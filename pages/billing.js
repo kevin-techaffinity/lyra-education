@@ -59,12 +59,12 @@ const Billing = () => {
 
   const choosePlan = async (plan) => {
     const payload = {
-      amount: (((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
+      amount: (((availableVoucher?.plantype == plan?.name || availableVoucher?.plantype == 'all') && availableVoucher?.discount) ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
       item_name: module?.name?.trim().slice(0, -1)
     }
 
     if(parseInt(payload?.amount) < 6) {
-      createSubscription({plan_id: plan?.id.toString(), amount: payload?.amount, moduleId: module?.id}).then((data) => {
+      createSubscription({plan_id: plan?.id?.toString(), amount: payload?.amount, moduleId: module?.id}).then((data) => {
         router.push(module?.slug)
       })
     } else {
@@ -87,6 +87,8 @@ const Billing = () => {
   const handleVoucher = () => {
     setVoucher('')
     applyVoucher(voucher).then((data)  => {
+
+      console.log('Daaatttaa ', data)
       setAvailableVoucher(data);
       
       if(data?.discount == '100') {
@@ -99,58 +101,13 @@ const Billing = () => {
     })
   }
 
+  console.log('Availabe ', availableVoucher)
+
   return (
     <>
       <div className="container mt-md-5">
         <div className="row">
-          <div className='col-md-5'>
-            <h6 className='mb-3'>
-              <small style={{color: '#17A2B8'}}>Join a Life Coach today & live the life you want!</small>
-            </h6>
-            <h3>Select your Magic Plan</h3>
-            <div className="p-4 bg-light my-2">
-              <h6 className="my-2 font-weight-bold">What You get With Our Plan</h6>
-              <div className="my-4 d-flex flex-column">
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Skilled life coaching experts</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>A powerful journey to put you on the road to success</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Flexible learning at your own pace</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Step by step daily guidance from your coach</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Enhance your skill set and personal growth</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Invest in yourself & your future</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Practical tools to see tangible results</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Creative and well-developed contents</small>
-                </span>
-                <span className="my-2">
-                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
-                  <small>Bite size fun learning & development</small>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-7 px-5">
+        <div className="col-md-7 px-5 order-lg-2">
             <div className="my-5">
               <div className="px-4 w-100 pt-4 pb-2 bg-light my-2 shadow-sm">
                 <span className='text-info'>HAVE A VOUCHER TO  SUBMIT</span>
@@ -230,9 +187,10 @@ const Billing = () => {
                       </small>
                     </div>
                     <div className='col-md-3'>
-                      <small className='font-weight-bold'>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (plan?.price - (plan?.price * availableVoucher?.discount) /100) : 'R ' + plan?.price}</small>
+                      {console.log('Plan Price ', plan?.price)}
+                      <small className='font-weight-bold'>{(((availableVoucher?.plantype == plan?.name) || (availableVoucher?.plantype == 'all')) && availableVoucher?.discount) ? 'R ' + ((+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100))) : 'R ' + plan?.price}</small>
                       <br />
-                      {!availableVoucher && ((payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct) && ((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount))) && <small className='text-muted' style={{fontSize: '12px'}}><del>{((availableVoucher?.plan == plan?.name || availableVoucher?.plan == 'all') && availableVoucher?.discount) ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
+                      {!availableVoucher && ((payingPlan[plan?.name]?.deduct || (payingPlan[plan?.name]?.deduct) && ((availableVoucher?.plantype == plan?.name || availableVoucher?.plantype == 'all') && availableVoucher?.discount))) && <small className='text-muted' style={{fontSize: '12px'}}><del>{((availableVoucher?.plantype == plan?.name || availableVoucher?.plantype == 'all') && availableVoucher?.discount) ? 'R ' + (payingPlan[plan?.name]?.deduct - (payingPlan[plan?.name]?.deduct * availableVoucher?.discount) /100) : 'R ' + payingPlan[plan?.name]?.deduct}</del></small>}
                       <br />
                       {!availableVoucher && <small className='font-weight-bold text-muted' style={{fontSize: '11.5px'}}>Save {payingPlan[plan?.name]?.percentage} %</small>}
                     </div>
@@ -241,6 +199,54 @@ const Billing = () => {
               ))}
             </div>
           </div>
+          <div className='col-md-5 order-lg-1'>
+            <h6 className='mb-3'>
+              <small style={{color: '#17A2B8'}}>Join a Life Coach today & live the life you want!</small>
+            </h6>
+            <h3>Select your Magic Plan</h3>
+            <div className="p-4 bg-light my-2">
+              <h6 className="my-2 font-weight-bold">What You get With Our Plan</h6>
+              <div className="my-4 d-flex flex-column">
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Skilled life coaching experts</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>A powerful journey to put you on the road to success</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Flexible learning at your own pace</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Step by step daily guidance from your coach</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Enhance your skill set and personal growth</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Invest in yourself & your future</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Practical tools to see tangible results</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Creative and well-developed contents</small>
+                </span>
+                <span className="my-2">
+                  {/* <MdOutlineCheck color="#82C760" /> &nbsp; */}
+                  <small>Bite size fun learning & development</small>
+                </span>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </>
