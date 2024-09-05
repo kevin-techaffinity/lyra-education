@@ -10,8 +10,11 @@ import Hero from '../../components/Hero';
 import useService from '../../hooks/useService';
 import { getModule } from '../../services/Content';
 import { useModuleContext } from '../../context/ModuleContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Index() {
+  useAuth();
+
   const router = useRouter();
   const [slug, setSlug] = useState('/');
   const [module, setModule] = useState(null);

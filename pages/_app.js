@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 
 import '../styles/styles.sass';
 
+import '../styles/new_styles.css';
+
 import IdlePopup from '../components/IdlePopup';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';

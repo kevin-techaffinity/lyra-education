@@ -10,8 +10,11 @@ import useService from '../hooks/useService';
 import { getMyProgress } from '../services/CourseSubscription';
 import { autologout } from '../services/User';
 import { displayProgress } from '../utilities/showCourseStatus';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Progress() {
+  useAuth();
+
   const [myProgress, setMyProgress] = useState([]);
   const { modules } = useModules();
   const { service } = useService();

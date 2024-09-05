@@ -17,8 +17,11 @@ import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
 import { checkSubscription, createSubscription } from '../../../services/CourseSubscription';
 import { useModuleContext } from '../../../context/ModuleContext';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function Page() {
+  useAuth();
+
   const router = useRouter();
   const [page, setPage] = useState({});
   const [module, setModule] = useState({});
