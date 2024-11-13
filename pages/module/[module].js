@@ -33,7 +33,7 @@ export default function Index() {
   useEffect(() => {
     getModule(router.query.module).then((data) => {
       const { chapters } = data;
-      const chapter = chapters.find((o) => o.status !== 'COMPLETED') || {};
+      const chapter = chapters?.find((o) => o.status !== 'COMPLETED') || {};
       const pages = chapter.pages || [];
       const progress = pages.find((o) => ['PENDING'].includes(o.status));
       setSlug(progress ? progress.slug : '');

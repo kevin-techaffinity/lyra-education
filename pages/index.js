@@ -26,10 +26,9 @@ import Logo from '../components/Logo';
 import { useDomainContext } from '../context/DomainContext';
 import { getDomain } from '../utilities/getDomain';
 import Img from '../components/Image';
-import Image from 'next/legacy/image';
 
 const staticContent = {
-  img: <Logo />, 
+  img: <Logo />,
   title: "Life Space",
   subtitle: "Welcome hereee to Life Space, You get all in one place",
   bannerTitle: "Reliable Software Advice",
@@ -41,7 +40,6 @@ const staticContent = {
 const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, formRef}) => {
   const [render, setRender] = useState(content)
 
-  
   useEffect(() => {
     if (content == undefined) {
       setRender(staticContent)
@@ -52,7 +50,6 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
 
   return (
     <Modal id="login" show={show} size="xl" backdrop="static" keyboard={false} centered>
-      {console.log('Render ',render)}
       <Modal.Body>
         <div className="modal-main-content login-modal">
           <div className="row">
