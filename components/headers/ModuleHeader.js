@@ -68,7 +68,7 @@ export default function ModuleHeader({ slug, item }) {
   useEffect(() => {
     setClientDomain(getDomain());
     populateAlertScreens()
-  })
+  }, [])
 
   useEffect(() => {
     if (content == undefined) {

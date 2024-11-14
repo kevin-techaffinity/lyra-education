@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { checkVoucher, payHere } from '../services/Payment';
+import React, { useState, useEffect, useMemo } from 'react';
+import { checkVoucher, getPricingTier, payHere } from '../services/Payment';
 import { MdOutlineCheck } from 'react-icons/md';
 import { getVouchers, updateVoucher } from '../public/data/voucher';
 import { courseSubscription, updateSubscription } from '../public/data/courseSubscription';
@@ -11,6 +11,7 @@ import { getPlan } from '../services/Plan';
 import { createSubscription } from '../services/CourseSubscription';
 import { applyVoucher } from '../services/Voucher';
 import { useAuth } from '../hooks/useAuth';
+import { getDomain } from '../utilities/getDomain';
 
 
 const payingPlan = {
@@ -30,8 +31,8 @@ const payingPlan = {
       "Practical tools to see tangible results",
       "Creative and well-developed contents",
       "Bite size fun learning & development"
-  ],
-  active: false,
+    ],
+    active: false,
   },
   Pro: {
     description: 'Select any 2 coaching programmes and get lifetime access',
@@ -49,9 +50,8 @@ const payingPlan = {
       "Practical tools to see tangible results",
       "Creative and well-developed contents",
       "Bite size fun learning & development"
-  ],
-  active: false,
-
+    ],
+    active: false,
   },
   Premium: {
     description: 'Select any 3 coaching programmes and get lifetime access',
@@ -69,9 +69,8 @@ const payingPlan = {
       "Practical tools to see tangible results",
       "Creative and well-developed contents",
       "Bite size fun learning & development"
-  ],
-  active: true,
-
+    ],
+    active: true,
   },
   Platinum: {
     description: 'Access unlimited coaching programmes for a year',
@@ -89,9 +88,8 @@ const payingPlan = {
       "Practical tools to see tangible results",
       "Creative and well-developed contents",
       "Bite size fun learning & development"
-  ],
-  active: false,
-
+    ],
+    active: false,
   },
 };
 
@@ -105,8 +103,12 @@ const Billing = () => {
   const [voucher, setVoucher] = useState('');
   const [availableVoucher, setAvailableVoucher] = useState('');
   const [plans, setPlans] = useState([]);
+  const [content, setContent] = useState();
 
   useEffect(() => {
+    getPricingTier(getDomain()).then((data) => {
+      setContent(data);
+    })
     getModule(course).then((data) => {
       setModule(data);
     });
@@ -114,6 +116,14 @@ const Billing = () => {
       setPlans(data)
     })
   }, [router.query]);
+
+  const render = useMemo(() => {
+    if (content) {
+      return content
+    } else {
+      return plans
+    }
+  }, [content])
 
   const choosePlan = async (plan) => {
     const payload = {
@@ -159,8 +169,6 @@ const Billing = () => {
     })
   }
 
-  console.log('Availabe ', availableVoucher)
-
   return (
     <>
       <div className="voucher-section">
@@ -196,7 +204,7 @@ const Billing = () => {
         <div className="container">
           <div className="plan-block">
 
-          {plans
+          {render
             ?.map((plan) => {
               const planDetails = payingPlan[plan?.name] || {};
               return { ...plan, planDetails }; // Merge planDetails into each plan object
@@ -206,11 +214,11 @@ const Billing = () => {
               const planDetails = plan.planDetails;
 
             // Base calculation for the strike-through price
-            const strikePrice = ((parseFloat(plan?.price) *100) /  ( 100 - (planDetails?.percentage || 1) )).toFixed(0);
+            const strikePrice = ((parseFloat(plan?.price) *100) /  ( 100 - (planDetails?.percentage || 1))).toFixed(0);
 
             // Discount calculation based on voucher
-            const basePrice = parseFloat(plan?.price);
-            const discount = (availableVoucher?.plantype === plan?.name || availableVoucher?.plantype === 'all') ? availableVoucher?.discount : 0;
+            const basePrice = parseFloat(plan?.price)
+            const discount = (availableVoucher?.plantype == plan?.id || availableVoucher?.plantype == 'all') ? availableVoucher?.discount : 0;
             const exactDiscountedPrice = (basePrice - (basePrice * discount / 100)).toFixed(0);
 
             return (
@@ -234,12 +242,19 @@ const Billing = () => {
                       <p>{planDetails?.description}</p>
                     </div>
                     <ul className="plan-list">
-                      {planDetails.features.map((feature, index) => (
+                      {plan?.feature?.length > 0 ? plan.feature.map((f, index) => (
                         <li key={index}>
                           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M9.04297 18.4783C14.0135 18.4783 18.043 14.4488 18.043 9.47827C18.043 4.50771 14.0135 0.478271 9.04297 0.478271C4.07241 0.478271 0.0429688 4.50771 0.0429688 9.47827C0.0429688 14.4488 4.07241 18.4783 9.04297 18.4783ZM8.81119 13.1185L13.8112 7.11846L12.2747 5.83809L7.97577 10.9969L5.75008 8.77116L4.33586 10.1854L7.33586 13.1854L8.11017 13.9597L8.81119 13.1185Z" fill="#17A2B8"/>
                           </svg>
-                          <p>{feature}</p>
+                          <p>{f}</p>
+                        </li>
+                      )) : planDetails?.features?.map((f, index) => (
+                        <li key={index}>
+                          <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" clipRule="evenodd" d="M9.04297 18.4783C14.0135 18.4783 18.043 14.4488 18.043 9.47827C18.043 4.50771 14.0135 0.478271 9.04297 0.478271C4.07241 0.478271 0.0429688 4.50771 0.0429688 9.47827C0.0429688 14.4488 4.07241 18.4783 9.04297 18.4783ZM8.81119 13.1185L13.8112 7.11846L12.2747 5.83809L7.97577 10.9969L5.75008 8.77116L4.33586 10.1854L7.33586 13.1854L8.11017 13.9597L8.81119 13.1185Z" fill="#17A2B8"/>
+                          </svg>
+                          <p>{f}</p>
                         </li>
                       ))}
                     </ul>

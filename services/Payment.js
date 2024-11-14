@@ -1,7 +1,12 @@
-import { post } from "../utilities/httpRequest";
+import { get, post } from "../utilities/httpRequest";
 
 export const payHere = async ({amount, item_name}) => {
   const response = await post({request: `/payhere`, body: {amount, item_name} })
+  return response;
+}
+
+export const getPricingTier = async (domain) => {
+  const response = await get({request: '/pricing_tier/' + domain})
   return response;
 }
 
