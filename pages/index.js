@@ -94,7 +94,7 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
                         height={43}
                         objectFit="cover"
                         objectPosition="top"
-                        publicId={render?.assets?.img}
+                        publicId={render?.assets?.logo}
                         className={styles.pageHeader__image}
                         alt={'logo'}
                       />}
