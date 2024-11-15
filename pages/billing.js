@@ -118,7 +118,7 @@ const Billing = () => {
   }, [router.query]);
 
   const render = useMemo(() => {
-    if (content) {
+    if (content?.length > 0) {
       return content
     } else {
       return plans
@@ -169,6 +169,8 @@ const Billing = () => {
     })
   }
 
+  console.log('Render ', render)
+
   return (
     <>
       <div className="voucher-section">
@@ -194,8 +196,6 @@ const Billing = () => {
               </div>
             </form>
           </div>
-
-
         </div>
       </div>
 
