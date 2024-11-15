@@ -1,6 +1,6 @@
 import { deleteCookie, setCookie } from 'cookies-next';
 
-import { post, patch } from '../utilities/httpRequest';
+import { post, patch, get } from '../utilities/httpRequest';
 
 export const login = async ({ msisdn }) => {
   const response = await post({ request: '/login', body: { msisdn } });
@@ -37,3 +37,9 @@ export const oneTimePassword = async ({ msisdn, otp }) => {
   const response = await post({ request: '/otp', body: { msisdn, otp } });
   return response;
 };
+
+export const getAuthContent = async (domain) => {
+  const response = await get({request: '/auth_page/' + domain});
+
+  return response;
+}

@@ -11,6 +11,7 @@ import { getMyProgress } from '../services/CourseSubscription';
 import { autologout } from '../services/User';
 import { displayProgress } from '../utilities/showCourseStatus';
 import { useAuth } from '../hooks/useAuth';
+import { useDomainContext } from '../context/DomainContext';
 
 export default function Progress() {
   useAuth();
@@ -18,6 +19,7 @@ export default function Progress() {
   const [myProgress, setMyProgress] = useState([]);
   const { modules } = useModules();
   const { service } = useService();
+  const {clientDomain} = useDomainContext()
 
   const { assets } = service;
 
