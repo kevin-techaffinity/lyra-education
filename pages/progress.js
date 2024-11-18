@@ -23,8 +23,6 @@ export default function Progress() {
 
   const { assets } = service;
 
-  if (!modules) return null;
-  if (!service) return null;
 
   const md = new Remarkable();
   md.set({
@@ -45,6 +43,9 @@ export default function Progress() {
 
     window.location = '/';
   }
+
+  if (!modules) return null;
+  if (!service) return null;
 
   return (
     <>
