@@ -157,7 +157,7 @@ img, svg {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 10;
+    z-index: 1;
 }
 
 .form-voucher .btn:hover {
@@ -247,7 +247,9 @@ img, svg {
   list-style-type: none !important;
 }
 
-
+.form-voucher .input-group-btn .btn {
+  z-index: 1 !important;
+}
 .plan-list li:before {
   display: none;
   }
@@ -328,7 +330,7 @@ img, svg {
 .plan-data.active {
     background: #17A2B8;
     box-shadow: 0px 42px 34px rgba(23, 162, 184, 0.29);
-    z-index: 2;
+    z-index: 1;
     transform: translateY(-50px);
     transition: var(--primary-transition);
 }
@@ -610,11 +612,16 @@ img, svg {
     }
     .form-voucher .input-group-btn {
         width: 100%;
+        z-index: 1 !important;
+    }
+    .form-voucher .input-group-btn .btn {
+      z-index: 1 !important;
     }
     .form-voucher .btn {
         position: relative;
         width: 100%;
         margin-top: 12px;
+        z-index: 1 !important;
     }
     .plan-price h3 {
         flex-wrap: wrap;

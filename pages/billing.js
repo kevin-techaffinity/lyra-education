@@ -127,7 +127,7 @@ const Billing = () => {
 
   const choosePlan = async (plan) => {
     const payload = {
-      amount: (((availableVoucher?.plantype == plan?.name || availableVoucher?.plantype == 'all') && availableVoucher?.discount) ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
+      amount: (((availableVoucher?.plantype == plan?.id || availableVoucher?.plantype == 'all') && availableVoucher?.discount) ? (+plan?.price - ((+plan?.price * +availableVoucher?.discount) /100)) : plan?.price)?.toString(),
       item_name: module?.name?.trim().slice(0, -1)
     }
 
@@ -168,8 +168,6 @@ const Billing = () => {
       toast('Failed to apply discount !!');
     })
   }
-
-  console.log('Render ', render)
 
   return (
     <>
