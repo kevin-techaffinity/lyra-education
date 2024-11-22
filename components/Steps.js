@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import Link from 'next/link'
 
 import styles from '../styles/components/Steps.module.sass';
 
@@ -11,7 +12,7 @@ export default function Steps({ page }) {
 
   return (
     <div className={styles.steps}>
-      <a
+      <Link
         className={`${styles.steps__item} ${styles.steps__previous}`}
         href={`/module/${moduleSlug}/${previous || ''}`}
       >
@@ -24,8 +25,8 @@ export default function Steps({ page }) {
           {previous ? 'Back' : 'Overview'}
           <label className={styles.steps__label}>{previousName || chapter}</label>
         </div>
-      </a>
-      <a
+      </Link>
+      <Link
         className={`${styles.steps__item} ${styles.steps__next}`}
         href={`/module/${moduleSlug}/${next || ''}`}
       >
@@ -38,7 +39,7 @@ export default function Steps({ page }) {
             <FaAngleRight />
           </i>
         )}
-      </a>
+      </Link>
     </div>
   );
 }

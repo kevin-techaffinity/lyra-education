@@ -16,7 +16,6 @@ export default function Login({ login }) {
   useEffect(() => {
     window.document.body.classList.add('login');
     window.scrollTo(0, 0);
-
     return () => {
       window.document.body.classList.remove('login');
     };

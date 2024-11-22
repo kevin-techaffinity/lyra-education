@@ -15,24 +15,20 @@ import Steps from '../../../components/Steps';
 import useService from '../../../hooks/useService';
 import useSubscribed from '../../../hooks/useSubscribed';
 import { getModule, getPage } from '../../../services/Content';
+import { checkSubscription, createSubscription } from '../../../services/CourseSubscription';
+import { useModuleContext } from '../../../context/ModuleContext';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function Page() {
+  useAuth();
+
   const router = useRouter();
   const [page, setPage] = useState({});
   const [module, setModule] = useState({});
+  const [checkSubscribe, setCheckSubscribe] = useState(false);
 
   const { subscriptionStatus } = useSubscribed();
   const { service } = useService();
-
-  useEffect(() => {
-    if (!service) return;
-
-    if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
-      if (!router.query.preview) {
-        router.push('/billing')
-      }
-    }
-  }, [service, router.query, subscriptionStatus]);
 
   useEffect(() => {
     getPage(router.query.page, router.query.preview).then((data) => {
@@ -43,6 +39,26 @@ export default function Page() {
       setModule(data);
     });
   }, [router.query]);
+
+  useEffect(() => {
+    if (!service) return;
+
+    if(module?.id) {
+      checkSubscription(module?.id).then((data) => {
+        if(data) {
+          router.push('/billing?course=' + router.query.module)
+        }
+      })
+    }
+
+    setCheckSubscribe(true)
+    // if (!subscriptionStatus.subscribed.hasAccess && service.metadata.subscribe) {
+    //   if (!router.query.preview) {
+    //     router.push('/billing?course=' + router.query.module)
+    //   }
+    // }
+  }, [service, router.query, module, subscriptionStatus]);
+
 
   const md = new Remarkable();
 
@@ -55,7 +71,7 @@ export default function Page() {
   if (!service) return null;
   if (!page) return null;
 
-  return (
+  return checkSubscribe && (
     <>
       {service.assets && <Hero banner={service.assets.banner} />}
       <Grid>

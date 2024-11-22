@@ -1,9 +1,18 @@
-import { post } from "../utilities/httpRequest";
+import { get, post } from "../utilities/httpRequest";
 
-export const payHere = async (amount, item_name) => {
+export const payHere = async ({amount, item_name}) => {
   const response = await post({request: `/payhere`, body: {amount, item_name} })
   return response;
-} 
+}
+
+export const getPricingTier = async (domain) => {
+  const response = await get({request: '/pricing_tier/' + domain})
+  return response;
+}
+
+export const checkVoucher = async (voucher) => {
+  await put({request: `/voucher`, body: {voucher}})
+}
 
 export const choosePlan = async () => {
   const url = 'https://secure.paygate.co.za/payweb3/process.trans';
