@@ -4,7 +4,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Form, Modal, Button } from 'react-bootstrap';
-
+import src from '../public/images/logo.png'
 import styles from '../styles/components/PageHeader.module.sass';
 
 import Banner from '../components/Banner';
@@ -27,6 +27,7 @@ import { useDomainContext } from '../context/DomainContext';
 import { getDomain } from '../utilities/getDomain';
 import Img from '../components/Image';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const staticContent = {
   img: <Logo />,
@@ -47,8 +48,9 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
     } else {
       setRender(content)
     }
-  }, [content])
+  }, [content]);
 
+  console.log('Render ', render)
   return (
     <Modal id="login" show={show} size="xl" backdrop="static" keyboard={false} centered>
       <Modal.Body>
@@ -56,6 +58,17 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
           <div className="row">
             <div className="col-lg-6">
               <div className="login-descrp text-start">
+                {!render.img && <div className={'imageWrapper'}>
+                  <Img
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition="top"
+                    publicId={render?.assets?.img}
+                    className={styles.pageHeader__image}
+                    alt={'img'}
+                  />
+                  <div className={'gradientOverlay'}></div>
+                </div>}
                 <svg
                   width="55"
                   height="37"
@@ -77,7 +90,7 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
                 <h4>{render?.bannerTitle}</h4>
                 <p>{render?.bannerDescription}</p>
                 <p className="author-name">
-                  - {render?.bannerWritter}, <span>{render?.bannerWritterPosition}</span>
+                  <span> - {render?.bannerWritter}, &nbsp;</span> <span>{render?.bannerWritterPosition}</span>
                 </p>
               </div>
             </div>
