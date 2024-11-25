@@ -2,7 +2,7 @@ import { deleteCookie, setCookie } from 'cookies-next';
 
 import { post, patch, get } from '../utilities/httpRequest';
 
-export const login = async ({ msisdn }) => {
+export const login = async (msisdn) => {
   const response = await post({ request: '/login', body: { msisdn } });
   return response;
 };

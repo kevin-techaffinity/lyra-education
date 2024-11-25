@@ -17,7 +17,7 @@ import useCompleted from '../hooks/useCompleted';
 import useModules from '../hooks/useModules';
 import useSubscribed from '../hooks/useSubscribed';
 import { addOneDay } from '../utilities/date';
-import { getAuthContent, signup } from '../services/User';
+import { getAuthContent, login, signin, signup } from '../services/User';
 import axios from 'axios';
 import { hasCookie } from 'cookies-next';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +26,7 @@ import Logo from '../components/Logo';
 import { useDomainContext } from '../context/DomainContext';
 import { getDomain } from '../utilities/getDomain';
 import Img from '../components/Image';
+import { useRouter } from 'next/navigation';
 
 const staticContent = {
   img: <Logo />,
@@ -187,6 +188,7 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
 }
 
 export default function Index({ allowPopup }) {
+  const router = useRouter()
   const [show, setShow] = useState(true);
   const [flash, setFlash] = useState(undefined);
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -272,19 +274,29 @@ export default function Index({ allowPopup }) {
         paymentMethod: payment_type,
       };
 
-      const { status, emailVerificationToken } = await signup(payload);
+      const { status, emailVerificationToken, message } = await signup(payload);
 
       if (status !== 201) {
         setFlash(message);
         return;
       }
 
-      const response = await axios.post('/api/send', { token: emailVerificationToken });
-      if (response.status == 200) {
-        setFlash('Check email for verification');
-        setData({ username: '', payment_type: '', email: '', password: '', confirm_password: '' });
-        setDisabled(true);
+      // const response = await axios.post('/api/send', { token: emailVerificationToken });
+      // if (response.status == 200) {
+      //   setData({ username: '', payment_type: '', email: '', password: '', confirm_password: '' });
+      //   router.push('/login?');
+      //   setDisabled(true);
+      // }
+
+      const { status: signInStatus, token, message: signInMessage } = await signin({email, password});
+      if (signInStatus !== 200) {
+        setFlash(signInMessage);
+        return;
       }
+      setCookie('sanitizedMsisdn', email);
+      login(token)
+      setCookie('token', token);
+      router.push('/')
     } catch (error) {
       console.log(error);
     }

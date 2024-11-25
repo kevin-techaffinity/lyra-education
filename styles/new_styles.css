@@ -328,7 +328,7 @@ img, svg {
 .plan-data.active {
     background: #17A2B8;
     box-shadow: 0px 42px 34px rgba(23, 162, 184, 0.29);
-    z-index: 2;
+    z-index: 1;
     transform: translateY(-50px);
     transition: var(--primary-transition);
 }
@@ -538,6 +538,9 @@ img, svg {
     font-weight: var(--fw-semibold);
     color: #2C2F46;
     padding-left: 16px;
+}
+.input-group-btn .btn{
+  z-index: 1 !important;
 }
 /*Hover Effet for the plan*/
 /*.plan-data:hover {
