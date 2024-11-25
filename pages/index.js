@@ -27,7 +27,6 @@ import { useDomainContext } from '../context/DomainContext';
 import { getDomain } from '../utilities/getDomain';
 import Img from '../components/Image';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const staticContent = {
   img: <Logo />,
@@ -58,7 +57,7 @@ const RenderContent = ({handleSubmit, show, content, flash, data, handleChange, 
           <div className="row">
             <div className="col-lg-6">
               <div className="login-descrp text-start">
-                {!render.img && <div className={'imageWrapper'}>
+                {!render?.img && <div className={'imageWrapper'}>
                   <Img
                     layout="fill"
                     objectFit="cover"
