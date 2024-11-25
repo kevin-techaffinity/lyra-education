@@ -89,8 +89,10 @@ export default function Banner() {
       />
       <Grid>
         <div className={styles.banner__content}>
-          <h1 dangerouslySetInnerHTML={{ __html: metadata.heading }} />
-          <h2 dangerouslySetInnerHTML={{ __html: metadata.description }} />
+          <h1 className='d-lg-block d-none' dangerouslySetInnerHTML={{ __html: metadata.heading }} />
+          <h2 className='d-lg-block d-none' dangerouslySetInnerHTML={{ __html: metadata.description }} />
+          <h5 className='d-lg-none d-block text-white' dangerouslySetInnerHTML={{ __html: metadata.heading }} />
+          <p className='d-lg-none d-block text-white py-2' dangerouslySetInnerHTML={{ __html: metadata.description }} />
           {button()}
         </div>
       </Grid>

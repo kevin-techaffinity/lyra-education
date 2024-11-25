@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 
 import '../styles/styles.sass';
 
+import '../styles/new_styles.css';
+
 import IdlePopup from '../components/IdlePopup';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
@@ -22,6 +24,8 @@ import { hasCookie } from 'cookies-next';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { ModuleProvider } from '../context/ModuleContext';
+import { DomainProvider } from '../context/DomainContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -70,51 +74,55 @@ export default function App({ Component, pageProps }) {
 
   return (
     <HelmetProvider>
-      <Helmet>
-        <script src="https://www.payfast.co.za/onsite/engine.js"></script>
-      </Helmet>
-      <Seo
-        title={metadata.title && `${metadata.title} - ${metadata.heading}`}
-        name={name}
-        description={metadata.description}
-        domainName={domainName}
-        logo={cld.video(assets.logo).toURL()}
-        primaryColor={primaryColor || 'transparent'}
-        banner={assets.banner}
-      />
-      <AnimatePresence mode="wait">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className={inter.className}
-        >
-          <Layout>
-            <GoogleAnalytics
-              gaMeasurementId={metadata.googleAnalytics}
-              trackPageViews
-              strategy="afterInteractive"
-            />
-            <Component {...pageProps} login={login} allowPopup={() => setAllowPopup(true)} />
-            <ToastContainer
-              position="bottom-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              draggable={false}
-              pauseOnVisibilityChange
-              pauseOnFocusLoss
-              closeOnClick
-              pauseOnHover
-            />
-          </Layout>
-          {showWelcome ? (
-            <WelcomePopup hide={hidePopup} />
-          ) : (
-            <IdlePopup allowPopup={allowPopup} hide={hidePopup} />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      <DomainProvider>
+        <ModuleProvider>
+          <Helmet>
+            <script src="https://www.payfast.co.za/onsite/engine.js"></script>
+          </Helmet>
+          <Seo
+            title={metadata.title && `${metadata.title} - ${metadata.heading}`}
+            name={name}
+            description={metadata.description}
+            domainName={domainName}
+            logo={cld.video(assets.logo).toURL()}
+            primaryColor={primaryColor || 'transparent'}
+            banner={assets.banner}
+          />
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className={inter.className}
+            >
+              <Layout>
+                <GoogleAnalytics
+                  gaMeasurementId={metadata.googleAnalytics}
+                  trackPageViews
+                  strategy="afterInteractive"
+                />
+                <Component {...pageProps} login={login} allowPopup={() => setAllowPopup(true)} />
+                <ToastContainer
+                  position="bottom-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  draggable={false}
+                  pauseOnVisibilityChange
+                  pauseOnFocusLoss
+                  closeOnClick
+                  pauseOnHover
+                />
+              </Layout>
+              {showWelcome ? (
+                <WelcomePopup hide={hidePopup} />
+              ) : (
+                <IdlePopup allowPopup={allowPopup} hide={hidePopup} />
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </ModuleProvider>
+      </DomainProvider>
     </HelmetProvider>
   );
 }

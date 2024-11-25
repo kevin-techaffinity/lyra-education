@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Remarkable } from 'remarkable';
 
@@ -9,21 +9,36 @@ import ModuleHeader from '../../components/headers/ModuleHeader';
 import Hero from '../../components/Hero';
 import useService from '../../hooks/useService';
 import { getModule } from '../../services/Content';
+import { useModuleContext } from '../../context/ModuleContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Index() {
+  useAuth();
+
   const router = useRouter();
   const [slug, setSlug] = useState('/');
   const [module, setModule] = useState(null);
+  const [remainingSlots, setRemainingSlots] = useState(0);
   const { service } = useService();
+  const { setCourse } = useModuleContext();
+
+  function closeModal() {
+    setShow(false);
+  }
+
+  function openModal() {
+    setShow(true);
+  }
 
   useEffect(() => {
     getModule(router.query.module).then((data) => {
       const { chapters } = data;
-      const chapter = chapters.find((o) => o.status !== 'COMPLETED') || {};
+      const chapter = chapters?.find((o) => o.status !== 'COMPLETED') || {};
       const pages = chapter.pages || [];
       const progress = pages.find((o) => ['PENDING'].includes(o.status));
       setSlug(progress ? progress.slug : '');
       setModule(data);
+      setCourse(data);
     });
   }, [router.query.module]);
 
