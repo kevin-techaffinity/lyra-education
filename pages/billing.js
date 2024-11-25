@@ -1,9 +1,5 @@
-import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
-import { checkVoucher, getPricingTier, payHere } from '../services/Payment';
-import { MdOutlineCheck } from 'react-icons/md';
-import { getVouchers, updateVoucher } from '../public/data/voucher';
-import { courseSubscription, updateSubscription } from '../public/data/courseSubscription';
+import { getPricingTier, payHere } from '../services/Payment';
 import { getModule } from '../services/Content';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -12,7 +8,6 @@ import { createSubscription } from '../services/CourseSubscription';
 import { applyVoucher } from '../services/Voucher';
 import { useAuth } from '../hooks/useAuth';
 import { getDomain } from '../utilities/getDomain';
-
 
 const payingPlan = {
   Basic: {
@@ -118,12 +113,12 @@ const Billing = () => {
   }, [router.query]);
 
   const render = useMemo(() => {
-    if (content?.length > 0) {
+    if (content && content?.length > 0) {
       return content
     } else {
       return plans
     }
-  }, [content])
+  }, [content, plans])
 
   const choosePlan = async (plan) => {
     const payload = {
@@ -168,8 +163,6 @@ const Billing = () => {
       toast('Failed to apply discount !!');
     })
   }
-
-  console.log('Render ', render)
 
   return (
     <>
