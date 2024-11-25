@@ -46,7 +46,7 @@ export default function Footer() {
             </a>
           )}
 
-          {true && metadata.unsubscribe && (
+          {/* {true && metadata.unsubscribe && (
             <a href={unsubscribeUrl}>
               <span dangerouslySetInnerHTML={{ __html: 'Unsubscribe' }} />
             </a>
@@ -57,7 +57,7 @@ export default function Footer() {
             <i className="icon">
               <FaAngleRight />
             </i>
-          </Link>
+          </Link> */}
 
           <div className={styles.footer__copy}>
             &copy; Copyright <b>{metadata.title}</b>. Product of <b>MaxLife</b>
