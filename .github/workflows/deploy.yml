@@ -83,14 +83,14 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -p 22 ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
 
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-            docker pull ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
 
-            docker rm -f lifespace || exit
+            sudo docker rm -f lifespace || exit
 
-            docker run -d -p 3000:3004 --name lifespace lifespace:${{ github.sha }} || exit
+            sudo docker run -d -p 3000:3004 --name lifespace lifespace:${{ github.sha }} || exit
 
             # Clean up old Docker images (optional)
-            docker image prune -f || exit
+            sudo docker image prune -f || exit
           EOF
