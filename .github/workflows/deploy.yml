@@ -83,7 +83,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -p 22 ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
 
-            # Pull the latest Docker image
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
             docker pull ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
 
             docker rm -f lifespace || exit
