@@ -66,7 +66,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Publish image to Docker Hub
-        run: docker push lifespace:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }}
 
       - name: Set up SSH Key
         uses: webfactory/ssh-agent@v0.5.3
@@ -78,7 +78,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 22 ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
 
             # Pull the latest Docker image
-            docker pull lifespace:${{ github.sha }} || exit
+            docker pull ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
 
             docker rm -f lifespace || exit
 
