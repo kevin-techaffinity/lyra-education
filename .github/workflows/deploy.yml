@@ -63,7 +63,7 @@ jobs:
         run: docker images
 
       - name: Build Docker image
-        run: docker build -t lifespace:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} .
 
       - name: List Docker images again after build
         run: docker images
