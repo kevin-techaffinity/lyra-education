@@ -14,7 +14,7 @@ const payingPlan = {
     description: 'Select any 1 coaching programme and get lifetime access',
     deduct: '250',
     percentage: 20,
-    id: 4,
+    id: 2,
     position: 1,
     features: [
       "Skilled life coaching experts",
@@ -33,7 +33,7 @@ const payingPlan = {
     description: 'Select any 2 coaching programmes and get lifetime access',
     deduct: '500',
     percentage: 30,
-    id: 5,
+    id: 4,
     position: 2,
     features: [
       "Skilled life coaching experts",
@@ -52,7 +52,7 @@ const payingPlan = {
     description: 'Select any 3 coaching programmes and get lifetime access',
     deduct: '750',
     percentage: 40,
-    id: 6,
+    id: 5,
     position: 3,
     features: [
       "Skilled life coaching experts",
@@ -71,7 +71,7 @@ const payingPlan = {
     description: 'Access unlimited coaching programmes for a year',
     deduct: '1900',
     percentage: 55,
-    id: 8,
+    id: 6,
     position: 4,
     features: [
       "Skilled life coaching experts",
@@ -107,7 +107,10 @@ const Billing = () => {
     getModule(course).then((data) => {
       setModule(data);
     });
-    getPlan().then((data) => {
+  }, [router.query]);
+
+  useEffect(() => {
+    getPlan(getDomain()).then((data) => {
       setPlans(data)
     })
   }, [router.query]);

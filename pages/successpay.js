@@ -25,10 +25,7 @@ const SuccessPay = () => {
   }, []);
 
   const handleCourseSubscribe = () => {
-    createSubscription({plan_id: plan, amount, moduleId: module?.id}).then((data) => {
-      console.log('More Data', data)
-    })
-    // updateSubscription('admin', payingPlan.filter(item => item?.name == plan)[0], module, amount);
+    createSubscription({plan_id: plan, amount, moduleId: module?.id}).then((data) => {})
 
     router.push('/module/' + course)
   }

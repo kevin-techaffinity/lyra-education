@@ -1,14 +1,11 @@
-FROM node:16.13
-RUN apt-get update
+FROM node:16-alpine3.18 as builder
 
-WORKDIR /usr/src/app
-COPY package.json package-lock.json ./
-RUN npm install -D @swc/cli @swc/core
-RUN npm install
-
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
 COPY . .
+RUN npm run build
 
-EXPOSE 8080 3000
+EXPOSE 3004
 
-RUN npm run-script build
-CMD [ "npm", "start" ]
+CMD [ "npm","run","start" ]

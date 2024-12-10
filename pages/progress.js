@@ -23,8 +23,11 @@ export default function Progress() {
 
   const { assets } = service;
 
-  if (!modules) return null;
-  if (!service) return null;
+  useEffect(() => {
+    getMyProgress().then((data) => {
+      setMyProgress(data?.response)
+    });
+  }, [])
 
   const md = new Remarkable();
   md.set({
@@ -32,11 +35,6 @@ export default function Progress() {
     breaks: true,
   });
 
-  useEffect(() => {
-    getMyProgress().then((data) => {
-      setMyProgress(data?.response)
-    });
-  }, [])
 
   const {data} = displayProgress(myProgress, modules)
 
@@ -45,6 +43,9 @@ export default function Progress() {
 
     window.location = '/';
   }
+
+  if (!modules) return null;
+  if (!service) return null;
 
   return (
     <>
