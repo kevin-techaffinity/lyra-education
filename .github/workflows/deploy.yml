@@ -1,0 +1,96 @@
+# name: Deploy Next.js application
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Source
+#         uses: actions/checkout@v4
+
+#       - name: Create .env file
+#         run: |
+#           echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+#           echo "APP_ENV=${{ secrets.APP_ENV }}" >> .env
+#           echo "HOST_API=${{ secrets.HOST_API }}" >> .env
+#           echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
+
+#       - name: Build docker image
+#         run: docker build -t lifespace .
+
+#       - name: Login to docker hub
+#         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Publish image to docker hub
+#         run: docker push lifespace:latest
+
+#   deploy:
+#     needs: build
+#     runs-on: self-hosted
+#     steps:
+#       - name: Pull image from docker hub
+#         run: docker pull lifespace:latest
+#       - name: Delete old container
+#         run: docker rm -f lifespace
+#       - name: Run docker container
+#         run: docker run -d -p 3000:3004 --name lifespace
+name: Deploy LifeSpace
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "APP_ENV=${{ secrets.APP_ENV }}" >> .env
+          echo "HOST_API=${{ secrets.HOST_API }}" >> .env
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
+
+      - name: List Docker images
+        run: docker images
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} .
+
+      - name: List Docker images again after build
+        run: docker images
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Publish image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }}
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH into the server, pull the latest Docker image, and restart the app
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 22 ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
+
+            sudo docker rm -f lifespace || exit
+
+            sudo docker run -d -p 3000:3004 --name lifespace ${{ secrets.DOCKER_USERNAME }}/lifespace:${{ github.sha }} || exit
+
+            # Clean up old Docker images (optional)
+            sudo docker image prune -f || exit
+          EOF
