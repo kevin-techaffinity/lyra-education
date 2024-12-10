@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 import { Cloudinary } from '@cloudinary/url-gen';
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import { setCookie } from 'cookies-next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
