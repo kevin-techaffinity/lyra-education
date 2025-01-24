@@ -24,8 +24,6 @@ const FailedPay = () => {
   }, []);
 
   const handleCourseSubscribe = () => {
-    createSubscription({plan_id: plan, amount, moduleId: module?.id}).then((data) => {})
-
     router.push('/module/' + course)
   }
 
