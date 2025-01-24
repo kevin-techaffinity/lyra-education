@@ -4,7 +4,6 @@ import { getCookie, setCookie } from 'cookies-next';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Form, Modal, Button } from 'react-bootstrap';
-import src from '../public/images/logo.png'
 import styles from '../styles/components/PageHeader.module.sass';
 
 import Banner from '../components/Banner';
